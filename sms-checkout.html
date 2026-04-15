@@ -27,10 +27,10 @@
                 return;
             }
 
-            let handler = PaystackPop.setup({
+                        let handler = PaystackPop.setup({
                 key: PAYSTACK_PUBLIC_KEY,
                 email: email,
-                amount: amount, 
+                amount: parseInt(amount), 
                 currency: "NGN",
                 ref: ref,
                 metadata: { uid: uid },
