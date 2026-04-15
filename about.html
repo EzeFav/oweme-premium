@@ -49,7 +49,7 @@
         }
 
         .hero {
-            padding: 80px 5%;
+            padding: 60px 5%;
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
@@ -64,49 +64,84 @@
         .hero p {
             font-size: 18px;
             color: #8899AA;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .btn-download {
-            background-color: #4ADE80;
-            color: #0D1B2A;
-            padding: 16px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 12px;
-            transition: background 0.3s;
-            display: inline-block;
-        }
-
-        .btn-download:hover {
-            background-color: #3ac76e;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+        .pricing-section {
             padding: 60px 5%;
             background-color: #111E2E;
+            text-align: center;
         }
 
-        .feature-card {
-            background: #1A2E45;
-            padding: 30px;
-            border-radius: 16px;
-            text-align: left;
-        }
-
-        .feature-card h3 {
+        .pricing-section h2 {
+            font-size: 32px;
+            margin-bottom: 40px;
             color: #4ADE80;
-            margin-bottom: 12px;
-            font-size: 20px;
         }
 
-        .feature-card p {
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: #1A2E45;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #2A3F54;
+        }
+
+        .product-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+
+        .product-card .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4ADE80;
+            margin-bottom: 20px;
+        }
+
+        .product-card p {
             color: #8899AA;
+            margin-bottom: 20px;
             font-size: 15px;
+        }
+
+        .product-card ul {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .product-card ul li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-card ul li::before {
+            content: '✓';
+            color: #4ADE80;
+            font-weight: bold;
+        }
+
+        .badge {
+            background: #0D1B2A;
+            color: #8899AA;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
         }
 
         footer {
@@ -114,11 +149,21 @@
             padding: 40px 5%;
             color: #8899AA;
             font-size: 14px;
+            background-color: #0D1B2A;
         }
 
         footer a {
             color: #4ADE80;
             text-decoration: none;
+        }
+
+        .legal {
+            margin-top: 20px;
+            font-size: 12px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #556677;
         }
 
         @media (max-width: 600px) {
@@ -138,11 +183,50 @@
 
     <section class="hero">
         <h1>Track Every Debt. <br>Never Lose Your Money.</h1>
-        <p>OweMe is the ultimate debt-tracking app designed to help you effortlessly manage personal and business lending. Keep a clear record of who owes you, who you owe, and monitor your overall net balance in real time.</p>
-        <a href="#download" class="btn-download">Get the App</a>
+        <p>OweMe is an intuitive mobile application designed to help individuals and businesses manage their debts, track cash flow, and send polite reminders.</p>
     </section>
 
-    <section class="features">
-        <div class="feature-card">
-            <h3>📊 Visual Analytics</h3>
-            <p>Track your financial flow with beautiful week, month, and
+    <section class="pricing-section">
+        <h2>In-App Products & Pricing</h2>
+        <div class="products">
+            
+            <div class="product-card">
+                <div class="badge">One-Time Payment</div>
+                <h3>OweMe Premium</h3>
+                <div class="price">₦1,500</div>
+                <p>Unlock the full power of OweMe permanently. No recurring subscriptions.</p>
+                <ul>
+                    <li>Advanced Bar & Pie Charts</li>
+                    <li>Export Debts to PDF Reports</li>
+                    <li>Priority App Support</li>
+                    <li>Unlimited Debt Records</li>
+                </ul>
+            </div>
+
+            <div class="product-card">
+                <div class="badge">Consumable Top-up</div>
+                <h3>SMS Reminders</h3>
+                <div class="price">From ₦200</div>
+                <p>Purchase credits to send direct SMS reminders to debtors via the Termii API.</p>
+                <ul>
+                    <li>10 Credits (Starter) - ₦200</li>
+                    <li>30 Credits (Standard) - ₦500</li>
+                    <li>50 Credits (Value) - ₦1,000</li>
+                    <li>Instant credit delivery</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 SwiftLogix Solutions. All rights reserved.</p>
+        <p style="margin-top: 10px;">Contact Support: <a href="mailto:support@swiftlogix.com">support@swiftlogix.com</a></p>
+        
+        <div class="legal">
+            <p><strong>Refund Policy:</strong> Digital purchases (Premium Upgrades and SMS Credits) are delivered instantly and are generally non-refundable. If you experience an error during delivery, please contact our support team for immediate resolution.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
