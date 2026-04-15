@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy SMS Credits</title>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body style="background: #0D1B2A; color: white; font-family: sans-serif; text-align: center; padding-top: 60px;">
+    
+    <h3 style="color: #4ADE80;">Processing Secure Checkout...</h3>
+    <p style="color: #8899AA; font-size: 14px;">Please wait while the Paystack window opens.</p>
+
+    <script>
+        // Grab the details sent by your Sketchware app
+        const params = new URLSearchParams(window.location.search);
+        const amount = params.get("amount");
+        const email = params.get("email");
+        const ref = params.get("ref");
+        const uid = params.get("uid");
+
+        // Your Test Public Key
+        const PAYSTACK_PUBLIC_KEY = "pk_test_37de2bf6a99cf54bb6d916d3dd55fdd6eb90068e";
+
+        window.onload = function() {
+            if (!amount || !email) return;
+
+            let handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: email,
+                amount: amount, 
+                currency: "NGN",
+                ref: ref,
+                metadata: { uid: uid },
+                callback: function(response) {
+                    // This triggers your Sketchware WebView verification automatically!
+                    window.location.href = "https://oweme.success/?reference=" + response.reference;
+                },
+                onClose: function() {
+                    document.body.innerHTML = "<h3 style='color: #F87171;'>Payment Cancelled</h3><p>You can hit the back button.</p>";
+                }
+            });
+            handler.openIframe();
+        };
+    </script>
+</body>
+</html>
