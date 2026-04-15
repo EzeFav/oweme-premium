@@ -22,7 +22,10 @@
         const PAYSTACK_PUBLIC_KEY = "pk_test_37de2bf6a99cf54bb6d916d3dd55fdd6eb90068e";
 
         window.onload = function() {
-            if (!amount || !email) return;
+            if (!amount || !email) {
+                document.body.innerHTML = "<h3 style='color: #F87171;'>Error</h3><p>Missing payment details.</p>";
+                return;
+            }
 
             let handler = PaystackPop.setup({
                 key: PAYSTACK_PUBLIC_KEY,
@@ -32,7 +35,7 @@
                 ref: ref,
                 metadata: { uid: uid },
                 callback: function(response) {
-                    // This triggers your Sketchware WebView verification automatically!
+                    // This "success" link tells the Sketchware WebView to close and verify!
                     window.location.href = "https://oweme.success/?reference=" + response.reference;
                 },
                 onClose: function() {
