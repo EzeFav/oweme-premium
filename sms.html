@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OweMe — Buy SMS Credits</title>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0D1B2A;
+            color: #FFFFFF;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            background: #1A2E45;
+            border-radius: 16px;
+            padding: 32px 24px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: #4ADE80;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #0D1B2A;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #8899AA;
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .package-card {
+            background: #0D1B2A;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .package-card .credits {
+            color: #4ADE80;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .package-card .label {
+            color: #8899AA;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .package-card .price {
+            color: #FFFFFF;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .btn-pay {
+            width: 100%;
+            background: #4ADE80;
+            color: #0D1B2A;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-pay:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .secure-note {
+            text-align: center;
+            color: #8899AA;
+            font-size: 12px;
+        }
+
+        .status-screen {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .status-screen .emoji {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .status-screen h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .status-screen p {
+            color: #8899AA;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success h2 { color: #4ADE80; }
+        .error h2   { color: #F87171; }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #1A2E45;
+            border-top-color: #4ADE80;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #loading-screen {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: #0D1B2A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+
+    <!-- Main screen -->
+    <div id="main-screen">
+        <div class="logo">📱</div>
+        <h1>Buy SMS Credits</h1>
+        <p class="subtitle">Send debt reminders directly to your contacts via SMS.</p>
+
+        <div class="package-card">
+            <div class="credits" id="credits-display">--</div>
+            <div class="label">SMS Credits</div>
+            <div class="price" id="price-display">--</div>
+        </div>
+
+        <button class="btn-pay" id="pay-btn" onclick="startPayment()">
+            Pay Now
+        </button>
+        <p class="secure-note">🔒 Secured by Paystack</p>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p style="color: #8899AA; font-size: 14px;">Verifying your payment...</p>
+    </div>
+
+    <!-- Success screen -->
+    <div id="success-screen" class="status-screen success">
+        <div class="emoji">🎉</div>
+        <h2>Credits Added!</h2>
+        <p id="success-message">Your SMS credits have been added. Go back to OweMe to use them.</p>
+    </div>
+
+    <!-- Error screen -->
+    <div id="error-screen" class="status-screen error">
+        <div class="emoji">❌</div>
+        <h2>Payment Failed</h2>
+        <p id="error-message">Something went wrong. Please contact support if you were charged.</p>
+        <button class="btn-secondary" onclick="showScreen('main-screen')">Try Again</button>
+    </div>
+
+</div>
+
+<script>
+    const params  = new URLSearchParams(window.location.search);
+    const uid     = params.get("uid")     || "";
+    const email   = params.get("email")   || "";
+    const credits = parseInt(params.get("credits") || "0");
+    const amount  = parseInt(params.get("amount")  || "0"); // in kobo
+
+    const BACKEND_URL      = "https://oweme-backend.onrender.com";
+    const PAYSTACK_PUBLIC_KEY = "pk_test_a8ddb8faba36466beef337e79142472a9af829aa";
+
+    // Price display map
+    const priceMap = { 10: "₦200", 30: "₦500", 50: "₦1,000" };
+
+    window.onload = function() {
+        if (!uid || !email || !credits || !amount) {
+            document.getElementById("error-message").textContent =
+                "Missing payment details. Please go back to OweMe and try again.";
+            showScreen("error-screen");
+            return;
+        }
+        document.getElementById("credits-display").textContent = credits;
+        document.getElementById("price-display").textContent   = priceMap[credits] || "₦--";
+        document.getElementById("pay-btn").textContent         =
+            "Pay " + (priceMap[credits] || "") + " for " + credits + " credits";
+    };
+
+    function showScreen(id) {
+        ["main-screen", "loading-screen", "success-screen", "error-screen"]
+            .forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.style.display = "none";
+            });
+        const target = document.getElementById(id);
+        if (target) target.style.display = "block";
+    }
+
+    function startPayment() {
+        if (!uid || !email) return;
+
+        const handler = PaystackPop.setup({
+            key:      PAYSTACK_PUBLIC_KEY,
+            email:    email,
+            amount:   amount,
+            currency: "NGN",
+            ref:      "OWEME_SMS_" + uid + "_" + Date.now(),
+            metadata: { uid: uid, credits: credits },
+            callback: function(response) {
+                verifyPayment(response.reference);
+            },
+            onClose: function() {
+                // User closed without paying — do nothing
+            }
+        });
+
+        handler.openIframe();
+    }
+
+    async function verifyPayment(reference) {
+        showScreen("loading-screen");
+
+        try {
+            const response = await fetch(BACKEND_URL + "/buy-sms-credits", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    reference: reference,
+                    uid:       uid,
+                    credits:   credits
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById("success-message").textContent =
+                    credits + " SMS credits added! You now have " + data.newTotal + " credits.";
+                showScreen("success-screen");
+            } else {
+                document.getElementById("error-message").textContent =
+                    data.error || "Verification failed. Contact support.";
+                showScreen("error-screen");
+            }
+        } catch (err) {
+            document.getElementById("error-message").textContent =
+                "Network error. Check your connection and try again.";
+            showScreen("error-screen");
+        }
+    }
+</script>
+
+</body>
+</html>
