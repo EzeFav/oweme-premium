@@ -42,6 +42,26 @@ const transaction_id = params.get("transaction_id") || "";
 const credits        = parseInt(params.get("credits") || "0");
 const BACKEND_URL    = "https://oweme-backend-vercel.vercel.app/api";
 
+function goBack() {
+    window.location.href = "intent://open#Intent;scheme=oweme;package=com.swiftlogix.oweme;end";
+    setTimeout(function() { window.close(); }, 500);
+}
+
+function startCountdown() {
+    let count = 3;
+    const interval = setInterval(function() {
+        count--;
+        if (count <= 0) {
+            clearInterval(interval);
+            document.getElementById("countdown-text").textContent = "Returning to app...";
+            goBack();
+        } else {
+            document.getElementById("countdown-text").textContent =
+                "Returning to app in " + count + "...";
+        }
+    }, 1000);
+}
+
 async function verify() {
     if (!uid || !transaction_id || !credits) {
         document.getElementById("loading").style.display = "none";
@@ -69,6 +89,7 @@ async function verify() {
             document.getElementById("success-msg").textContent =
                 credits + " SMS credits added! You now have " + data.newTotal + " credits.";
             document.getElementById("success").style.display = "block";
+            startCountdown();
         } else {
             document.getElementById("error-msg").textContent =
                 data.error || "Verification failed. Contact support.";
