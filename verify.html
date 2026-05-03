@@ -99,10 +99,10 @@ async function verify() {
             document.getElementById("success").style.display = "block";
             startCountdown();
         } else {
-            document.getElementById("error-msg").textContent =
-                data.error || "Verification failed. Contact support.";
-            document.getElementById("error").style.display = "block";
-        }
+    document.getElementById("error-msg").textContent =
+        data.error + (data.debug ? " | " + JSON.stringify(data.debug) : "");
+    document.getElementById("error").style.display = "block";
+}
     } catch (err) {
         document.getElementById("loading").style.display = "none";
         document.getElementById("error-msg").textContent =
