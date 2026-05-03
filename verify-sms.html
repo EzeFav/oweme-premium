@@ -39,7 +39,6 @@ p{color:#8899AA;font-size:14px;line-height:1.6}
 const params         = new URLSearchParams(window.location.search);
 const uid            = params.get("uid")            || "";
 const transaction_id = params.get("transaction_id") || "";
-const status         = params.get("status")         || "";
 const credits        = parseInt(params.get("credits") || "0");
 const BACKEND_URL    = "https://oweme-backend-vercel.vercel.app/api";
 
@@ -48,14 +47,6 @@ async function verify() {
         document.getElementById("loading").style.display = "none";
         document.getElementById("error-msg").textContent =
             "Missing payment details. Go back to OweMe and try again.";
-        document.getElementById("error").style.display = "block";
-        return;
-    }
-
-    if (status !== "successful") {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-msg").textContent =
-            "Payment was not completed.";
         document.getElementById("error").style.display = "block";
         return;
     }
