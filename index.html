@@ -142,34 +142,31 @@
         document.getElementById(id).style.display = "block";
     }
 
-    function startPayment() {
-        if (!uid || !email) return;
-
-        FlutterwaveCheckout({
-            public_key: FLW_PUBLIC_KEY,
-            tx_ref: "OWEME_PREMIUM_" + uid + "_" + Date.now(),
-            amount: 1500,
-            currency: "NGN",
-            payment_options: "card, banktransfer, ussd",
-            customer: {
-                email: email,
-                name: "OweMe User"
-            },
-            customizations: {
-                title: "OweMe Premium",
-                description: "One-time premium unlock",
-                logo: "https://oweme-33636.web.app/favicon.ico"
-            },
-            callback: function(response) {
-                if (response.status === "successful") {
-                    verifyPayment(response.transaction_id);
-                }
-            },
-            onclose: function() {
-                // User closed popup
-            }
-        });
+    FlutterwaveCheckout({
+    public_key: FLW_PUBLIC_KEY,
+    tx_ref: "OWEME_PREMIUM_" + uid + "_" + Date.now(),
+    amount: 1500,
+    currency: "NGN",
+    payment_options: "card, banktransfer, ussd",
+    redirect_url: "https://EzeFav.github.io/oweme-premium/verify.html?uid=" + uid,
+    customer: {
+        email: email,
+        name: "OweMe User"
+    },
+    customizations: {
+        title: "OweMe Premium",
+        description: "One-time premium unlock",
+        logo: "https://oweme-33636.web.app/favicon.ico"
+    },
+    callback: function(response) {
+        if (response.status === "successful") {
+            verifyPayment(response.transaction_id);
+        }
+    },
+    onclose: function() {
+        // User closed popup
     }
+});
 
     async function verifyPayment(transaction_id) {
         showScreen("loading-screen");
