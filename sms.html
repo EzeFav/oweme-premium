@@ -105,10 +105,10 @@
     const credits = parseInt(params.get("credits") || "0");
 
     const BACKEND_URL    = "https://oweme-backend-vercel.vercel.app/api";
-    const FLW_PUBLIC_KEY = "FLWPUBK-98cea4f106b365c99887c9259cf674f6-X"; // Replace with your Flutterwave public key
+    const FLW_PUBLIC_KEY = "FLWPUBK-98cea4f106b365c99887c9259cf674f6-X";
 
-    const priceMap       = { 10: "₦200", 30: "₦500", 50: "₦1,000" };
-    const amountMap      = { 10: 200,    30: 500,     50: 1000 };
+    const priceMap  = { 10: "₦200", 30: "₦500", 50: "₦1,000" };
+    const amountMap = { 10: 200,    30: 500,     50: 1000 };
 
     window.onload = function() {
         if (!uid || !email || !credits) {
@@ -149,6 +149,7 @@
             amount: amount,
             currency: "NGN",
             payment_options: "card, banktransfer, ussd",
+            redirect_url: "https://EzeFav.github.io/oweme-premium/verify-sms.html?uid=" + uid + "&credits=" + credits,
             customer: {
                 email: email,
                 name: "OweMe User"
